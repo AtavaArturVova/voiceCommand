@@ -31,7 +31,7 @@ streamer.start({
 	command: "",
 
     initCallback: function () {
-        console.log("Началась запись."); 
+        console.log("Началась запись звука."); 
     },
 	dataCallback: function(text){
 		if(text !== ''){
@@ -82,11 +82,13 @@ document.querySelector('#button_id').onclick = function () {
 };
 
 document.querySelector('#button_id1').onclick = function () {
-	switchTasks(ApiSpeechKit.textOfVoice)
+	editText(ApiSpeechKit.textOfVoice,"getWordOutOfText");
 };
 
-function editText(){
-console.log("dsadsddsa");
+function editText(text){
+	var correctText = deleteLastCharacter(text);
+	if(arguments[1] === "getWordOutOfText")
+	getWordOutOfText();
 }
 
 function switchTasks(text){
@@ -103,9 +105,11 @@ function deleteLastCharacter(word){
 	return word.substring(0, word.length - 1);
 }
 
-function getFirstWord{
+function getWordOutOfText(){
 
 }
+
+
 
 
 
