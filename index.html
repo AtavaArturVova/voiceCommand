@@ -35,9 +35,10 @@ streamer.start({
     },
 	dataCallback: function(text){
 		if(text !== ''){
-			that.textOfVoice = text; 
+			that.textOfVoice = text;
+			//switchTasks();
 		}
-		
+		return;
     },
 	stopCallback: function () {
 		console.log("Stop");
@@ -52,18 +53,19 @@ streamer.start({
 }
 })();
 
-var jumpPage = (function(){
+var page = (function(){
 	var command = "открыть ";//команда
 	var commandTo;//команда к
 	var nameLink;//название ссылки
-	return { start: function(word){
-		for(var name in BDjumpPage){
+	return { open: function(word){
+		
+		for(var name in BDopenPage){
 			
 			commandTo = command + name;
-			nameLink = BDjumpPage[name];
+			nameLink = BDopenPage[name];
 			
-			if( word === commandTo){
-	 		 location = nameLink;
+			if( word === name){
+	 		 document.location = nameLink;
 			 break;
 			}
 		}
@@ -73,41 +75,54 @@ var jumpPage = (function(){
 	
 })();
 
-var BDjumpPage = {
+var BDopenPage = {
 	"я":"http://test2.kafelec.nau.edu.ua/",
+	"ты":"http://test2.kafelec.nau.edu.ua/"
 }
 
 document.querySelector('#button_id').onclick = function () {
 	ApiSpeechKit.start();
+	
 };
 
 document.querySelector('#button_id1').onclick = function () {
-	editText(ApiSpeechKit.textOfVoice,"getWordOutOfText");
+	switchTasks();
 };
 
-function editText(text){
-	var correctText = deleteLastCharacter(text);
-	if(arguments[1] === "getWordOutOfText")
-	getWordOutOfText();
-}
+var editor = (function(){
 
-function switchTasks(text){
-
-	var word = deleteLastCharacter(text);
-	console.log(word);
-	switch(word){
-		case "открыть": jumpPage.start(word); break;
+return {
+editText:function (text,command){
+	var correctText = this.deleteLastCharacter(text);
+	if(command === "getWordOutOfText 0"){
+		return this.getWordOutOfText(correctText,0);
 	}
-	
+	if(command === "getWordOutOfText 1"){
+		return this.getWordOutOfText(correctText,1);
+	}
+},
+
+deleteLastCharacter:function (word){
+	return word.substring(0, word.length - 1);
+},
+
+getWordOutOfText:function (text,indexWord){
+	return text.split(' ')[indexWord];
+}
+}
+})();
+
+function switchTasks(){
+	var command = editor.editText("открыть я ","getWordOutOfText 0");
+	switch(command){
+		case "открыть": console.log(page.open(editor.editText("открыть ты ","getWordOutOfText 1"))); break;
+		case "закрыть": alert("закрыть"); break;
+		case "я": alert("я"); break;
+	}
+
 };
  
-function deleteLastCharacter(word){
-	return word.substring(0, word.length - 1);
-}
 
-function getWordOutOfText(){
-
-}
 
 
 
