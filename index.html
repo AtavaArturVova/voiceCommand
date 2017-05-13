@@ -6,8 +6,11 @@
     <meta charset="utf-8">
 </head>
 <body>
-    <div id="button_id" style="width: 200px; height:100px; background:red;"></div>
+     <div id="button_id" style="width: 200px; height:100px; background:red;"></div>
      <div id="button_id1" style="width: 200px; height:100px; background:green;"></div>
+     <form action="#">
+     	<input id="name" type="text" placeholder="Имя">
+     </form>
     <script>
 window.onload = function(){	
 
@@ -36,7 +39,7 @@ streamer.start({
 	dataCallback: function(text){
 		if(text !== ''){
 			that.textOfVoice = text;
-			//switchTasks();
+			switchTasks();
 		}
 		return;
     },
@@ -52,7 +55,7 @@ streamer.start({
 }
 }
 })();
-
+////////////////////////////////////////////////////////////////
 var page = (function(){
 	var command = "открыть ";//команда
 	var commandTo;//команда к
@@ -79,16 +82,10 @@ var BDopenPage = {
 	"я":"http://test2.kafelec.nau.edu.ua/",
 	"ты":"http://test2.kafelec.nau.edu.ua/"
 }
+////////////////////////////////////////////////////////////////
 
-document.querySelector('#button_id').onclick = function () {
-	ApiSpeechKit.start();
-	
-};
 
-document.querySelector('#button_id1').onclick = function () {
-	switchTasks();
-};
-
+////////////////////////////////////////////////////////////////
 var editor = (function(){
 
 return {
@@ -111,19 +108,33 @@ getWordOutOfText:function (text,indexWord){
 }
 }
 })();
+////////////////////////////////////////////////////////////////
 
+////////////////////////////////////////////////////////////////
 function switchTasks(){
-	var command = editor.editText("открыть я ","getWordOutOfText 0");
+	var lete = ApiSpeechKit.textOfVoice;
+	console.log(lete);
+	var command = editor.editText(lete,"getWordOutOfText 0");
+
 	switch(command){
-		case "открыть": console.log(page.open(editor.editText("открыть ты ","getWordOutOfText 1"))); break;
-		case "закрыть": alert("закрыть"); break;
+		case "открыть": console.log(page.open(editor.editText(lete,"getWordOutOfText 1"))); break;
+		case "вести":document.activeElement.value = editor.editText(lete,"getWordOutOfText 1"); break;
 		case "я": alert("я"); break;
 	}
 
 };
- 
+////////////////////////////////////////////////////////////////
 
 
+document.querySelector('#button_id').onclick = function () {
+	ApiSpeechKit.start();
+	
+};
+
+document.querySelector('#name').onclick = function () {
+	switchTasks();
+	 
+};
 
 
 
